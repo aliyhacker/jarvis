@@ -1,0 +1,76 @@
+╔══════════════════════════════════════════════════════════╗
+║              J.A.R.V.I.S — Windows Sürümü                 ║
+║      Gerçek zamanlı sesli kişisel AI asistanı (Gemini)    ║
+╚══════════════════════════════════════════════════════════╝
+
+macOS sürümünden tam özellik paritesiyle Windows'a uyarlanmıştır.
+
+
+─────────────────────────  KURULUM  ─────────────────────────
+
+1) Python 3.10+ kur (python.org).
+   Kurulumda "Add Python to PATH" kutusunu MUTLAKA işaretle.
+
+2) Bu klasördeki  setup.bat  dosyasına çift tıkla.
+   - Sanal ortam oluşturur
+   - Tüm paketleri kurar (opencv ilk seferde biraz sürebilir)
+   - Grift fontlarını kurar
+   - config\api_keys.json dosyasını hazırlar
+
+3) Gemini API anahtarını gir:
+   - https://aistudio.google.com/apikey adresinden ücretsiz anahtar al
+   - Programı açıp ekrandaki AYARLAR (⚙) panelinden girebilirsin
+   - veya config\api_keys.json içine elle yazabilirsin
+
+
+─────────────────────────  BAŞLATMA  ────────────────────────
+
+   BASLAT.bat  dosyasına çift tıkla.
+
+   İstersen program içindeki "MASAÜSTÜNE KISAYOL EKLE" ve
+   "AÇILIŞTA BAŞLAT" düğmelerini kullanabilirsin.
+
+
+─────────────────────────  KISAYOLLAR  ──────────────────────
+
+   F4    → Mikrofonu sustur / aç        (Ctrl+M de çalışır)
+   F5    → Duraklat / devam et
+   F6    → Webcam'i aç / kapat
+   F11   → Tam ekran                     (Ctrl+F de çalışır)
+   ESC   → Tam ekrandan çık / pencere
+   👏👏  → İki kez alkışla = pencereyi öne getir
+
+
+─────────────────────────  ÖZELLİKLER  ──────────────────────
+
+   • Sesli sohbet (gerçek zamanlı, kesintisiz)
+   • Yazılı komut kutusu
+   • Uygulama açma, sistem bilgisi, cmd komutu çalıştırma
+   • Hava durumu
+   • Ekran analizi (aktif pencereyi okur)
+   • Webcam canlı akışı (JARVIS kamerayı görür)
+   • YouTube/Spotify'da müzik/video açma
+   • YouTube kanal istatistik raporu
+   • WhatsApp mesaj gönderme + kişi/rehber (.vcf) içe aktarma
+   • Kalıcı hafıza (seni hatırlar)
+   • Takvim ve Hatırlatıcılar (aşağıdaki nota bak)
+
+
+─────────────────────────  ÖNEMLİ NOT  ──────────────────────
+
+   Takvim ve Anımsatıcılar:
+   Apple Calendar / Apple Reminders YALNIZCA macOS'ta çalışır;
+   Windows'tan bu verilere erişmek mümkün değildir. Bu yüzden:
+     - Takvim  → Google Calendar (tarayıcıda açılır, etkinlik ekleme
+                 hazır doldurulmuş olarak gelir)
+     - Hatırlatıcı → Microsoft To-Do (tarayıcıda açılır)
+
+   Webcam ve Ekran için Windows kamera/ekran izinleri gerekebilir
+   (Ayarlar > Gizlilik ve Güvenlik > Kamera).
+
+
+─────────────────────────────────────────────────────────────
+   Sorun olursa: BASLAT.bat yerine bir komut isteminde
+   "venv\Scripts\activate.bat" sonra "python main.py" çalıştır;
+   hata mesajlarını orada görebilirsin.
+─────────────────────────────────────────────────────────────

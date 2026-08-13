@@ -1,0 +1,13 @@
+# JARVIS Windows — Gerekli paketler
+# Kurulum:  pip install -r requirements.txt
+
+google-genai          # Gemini Live API (ses + araç çağrıları)
+pyaudio               # Mikrofon / hoparlör (gerçek zamanlı ses)
+psutil                # Sistem bilgisi (pil, CPU, RAM, disk)
+Pillow                # Görüntü işleme (ekran + webcam analizi)
+requests              # Hava durumu, YouTube API, YouTube arama
+mss                   # Ekran görüntüsü yakalama (analyze_screen)
+opencv-python         # Webcam canlı akışı (toggle_webcam)
+pyperclip             # Pano kopyalama (WhatsApp otomasyonu)
+pyautogui             # WhatsApp Web otomatik gönderim (Enter)
+pygetwindow
