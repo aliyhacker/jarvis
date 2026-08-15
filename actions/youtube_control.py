@@ -10,6 +10,12 @@ komut çalışmadan önce tarayıcıda bir YouTube videosu açık olmalıdır
 Not: 'next' / 'previous' yalnızca bir oynatma listesi (playlist) veya karışım
 (mix) içindeyken YouTube tarafında etkin olur; tek başına açılmış tekil bir
 videoda bu kısayolların görünür bir etkisi olmayabilir.
+
+Ses (volume) hakkında: Yukarı/Aşağı ok tuşunun YouTube'daki GERÇEK adımı
+ölçüldü: %2 (20% iken 1 basış -> %22). Ama "volume_up"/"volume_down" komutu
+tek çağrıda %10'luk bir değişim yapsın isteniyor. Bu yüzden fonksiyon dışarıya
+hiçbir sayı (amount) almaz — her çağrıda ok tuşuna otomatik olarak 5 kere
+basar (5 x %2 = %10). Basit kullanım, sabit %10 adım.
 """
 
 from __future__ import annotations
@@ -29,16 +35,19 @@ except ImportError:
     HAS_PYGETWINDOW = False
 
 
-# YouTube'un kendi klavye kısayolları (video oynatıcı odaktayken çalışır).
-# https://support.google.com/youtube/answer/7631406
-_ACTION_KEYS: dict[str, tuple[str, ...] | str] = {
+_SECONDS_PER_SEEK_PRESS = 10   # J / L tuşu -> sabit 10 saniye (YouTube'un resmi kısayolu)
+
+_VOLUME_PRESS_COUNT = 5        # volume_up/volume_down çağrısı başına kaç kere ok tuşuna basılır
+_VOLUME_KEY_DELAY = 0.06       # Ardışık basışlar arasında bekleme (YouTube'un her basışı ayrı algılaması için)
+
+# Tek basışlık (sabit) komutlar — volume_up / volume_down burada YOK,
+# çünkü onlar birden fazla basış gerektiriyor ve ayrıca ele alınıyor.
+_SIMPLE_ACTION_KEYS: dict[str, tuple[str, ...] | str] = {
     "play_pause": "k",
     "next": ("shift", "n"),
     "previous": ("shift", "p"),
     "seek_forward": "l",      # 10 saniye ileri
     "seek_backward": "j",     # 10 saniye geri
-    "volume_up": "up",        # ~%5 ses artışı
-    "volume_down": "down",    # ~%5 ses azalışı
     "mute": "m",
     "fullscreen": "f",
     "theater_mode": "t",
@@ -92,12 +101,15 @@ def control_youtube(action: str) -> str:
         "back_10": "seek_backward",
         "rewind": "seek_backward",
         "louder": "volume_up",
+        "increase_volume": "volume_up",
         "quieter": "volume_down",
+        "decrease_volume": "volume_down",
         "unmute": "mute",
     }
     normalized = aliases.get(normalized, normalized)
 
-    if normalized not in _ACTION_KEYS:
+    all_actions = set(_SIMPLE_ACTION_KEYS) | {"volume_up", "volume_down"}
+    if normalized not in all_actions:
         return (
             f"Bilinmeyen YouTube komutu: '{action}'. "
             "Geçerli komutlar: play_pause, next, previous, seek_forward, "
@@ -115,11 +127,27 @@ def control_youtube(action: str) -> str:
         )
 
     try:
-        key = _ACTION_KEYS[normalized]
+        # --- Ses: sabit %10 değişim için ok tuşuna 5 kere basılır (5 x %2 = %10) ---
+        if normalized in ("volume_up", "volume_down"):
+            key = "up" if normalized == "volume_up" else "down"
+            for _ in range(_VOLUME_PRESS_COUNT):
+                pyautogui.press(key)
+                time.sleep(_VOLUME_KEY_DELAY)
+            yon = "arttırıldı" if normalized == "volume_up" else "azaltıldı"
+            return f"Tamam, ses %10 {yon}."
+
+        # --- Sarma ve diğer tüm sabit tek-basışlık komutlar ---
+        key = _SIMPLE_ACTION_KEYS[normalized]
         if isinstance(key, tuple):
             pyautogui.hotkey(*key)
         else:
             pyautogui.press(key)
+
+        if normalized == "seek_forward":
+            return f"Tamam, video {_SECONDS_PER_SEEK_PRESS} saniye ileri sarıldı."
+        if normalized == "seek_backward":
+            return f"Tamam, video {_SECONDS_PER_SEEK_PRESS} saniye geri sarıldı."
         return f"Tamam, YouTube'da '{normalized}' komutu gönderildi."
+
     except Exception as exc:
         return f"YouTube komutu gönderilemedi: {exc}"
